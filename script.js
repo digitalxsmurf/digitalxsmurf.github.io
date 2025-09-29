@@ -1,0 +1,87 @@
+function resizeCanvas(canvas) {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+
+window.onload = () => {
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    resizeCanvas(canvas);
+
+    let particles = [];
+    const image = new Image();
+    image.src = "./imgs/sakura.png"; // Ensure this file exists
+
+    image.onload = () => {
+        console.log("Image loaded successfully!");
+        initParticles();
+        animate();
+    };
+
+    image.onerror = () => {
+        console.error("Image failed to load. Check the path and filename.");
+    };
+
+    class Particle {
+        constructor() {
+            this.radius = Math.random() * 20 + 18;
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.baseOpacity = Math.random() * 0.5 + 0.5;
+            this.opacity = this.baseOpacity;
+            this.speed = Math.random() * 0.5 + 0.5;
+            this.rotation = Math.random() * Math.PI * 2;
+            this.rotationSpeed = (Math.random() - 0.5) * 0.05;
+        }
+
+        draw() {
+            ctx.save();
+            ctx.translate(this.x, this.y);
+            ctx.rotate(this.rotation);
+
+            let fadeThreshold = canvas.height * 0.85;
+            this.opacity = this.baseOpacity * ((fadeThreshold - this.y) / fadeThreshold);
+            this.opacity = Math.max(0.1, this.opacity);
+
+            ctx.globalAlpha = this.opacity;
+            ctx.drawImage(image, -this.radius, -this.radius, this.radius * 2, this.radius * 2);
+            ctx.restore();
+        }
+
+        update() {
+            this.y += this.speed;
+            this.rotation += this.rotationSpeed;
+
+            if (this.y > canvas.height || this.opacity < 0.12) {
+                this.y = -this.radius;
+                this.x = Math.random() * canvas.width;
+                this.baseOpacity = Math.random() * 0.5 + 0.5;
+            }
+
+            this.draw();
+        }
+    }
+
+    function initParticles(num = 15) {
+        particles = [];
+        for (let i = 0; i < num; i++) {
+            particles.push(new Particle());
+        }
+    }
+
+    function animate() {
+        ctx.fillStyle = "black";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        for (let p of particles) {
+            p.update();
+        }
+
+        requestAnimationFrame(animate);
+    }
+
+    window.addEventListener('resize', () => {
+        resizeCanvas(canvas);
+        initParticles();
+    });
+};
