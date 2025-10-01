@@ -11,10 +11,7 @@ A basic interactive web page using:
 - **JavaScript** (in a `<script>` tag in the HTML file)
 - **CSS** (inline in the HTML `<style>` block)
 
-## 🚀 View It Online
 
-See it live:  
-[https://sanchospace.github.io/](https://sanchospace.github.io/)
 
 ## 📁 Files
 
