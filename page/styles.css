@@ -1,11 +1,14 @@
+/* Full black background */
 html, body {
     margin: 0;
     padding: 0;
-    overflow: hidden;
+    height: 100%;
     background: black;
+    overflow: hidden;
 }
 
-canvas {
+/* Canvas fills the entire screen */
+#Matrix {
     display: block;
     width: 100vw;
     height: 100vh;
